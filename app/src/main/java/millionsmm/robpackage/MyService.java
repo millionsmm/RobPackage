@@ -1,9 +1,12 @@
 package millionsmm.robpackage;
 
 import android.accessibilityservice.AccessibilityService;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.os.Build;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.List;
 
@@ -50,6 +53,22 @@ public class MyService extends AccessibilityService {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * 模拟点击，拆开红包
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void openPacket() {
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        if (nodeInfo != null) {
+            //红包控件id随着wechat的版本而被变化
+            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByViewId("@id/b9m");
+            nodeInfo.recycle();
+            for (AccessibilityNodeInfo item : list) {
+                item.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
     }
