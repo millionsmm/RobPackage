@@ -1,7 +1,11 @@
 package millionsmm.robpackage;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.view.accessibility.AccessibilityEvent;
+
+import java.util.List;
 
 public class MyService extends AccessibilityService {
     @Override
@@ -23,6 +27,33 @@ public class MyService extends AccessibilityService {
                 break;
         }
     }
+
+    /**
+     * 处理通知栏信息
+     * 如果是wechat的红包提示信息，则模拟点击
+     *
+     * @param event
+     */
+    private void handleNotification(AccessibilityEvent event) {
+        List<CharSequence> texts = event.getText();
+        if (!texts.isEmpty()) {
+            for (CharSequence text : texts) {
+                String content = text.toString();
+                if (content.contains("[微信红包]")) {
+                    if (event.getParcelableData() != null && event.getParcelableData() instanceof Notification) {
+                        Notification notification = (Notification) event.getParcelableData();
+                        PendingIntent pendingIntent = notification.contentIntent;
+                        try {
+                            pendingIntent.send();
+                        } catch (PendingIntent.CanceledException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     @Override
     public void onInterrupt() {
