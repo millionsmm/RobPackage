@@ -74,6 +74,24 @@ public class MyService extends AccessibilityService {
     }
 
     /**
+     * 模拟点击，打开抢红包界面
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    private void getPacket(){
+        AccessibilityNodeInfo rootNode=getRootInActiveWindow();
+        AccessibilityNodeInfo nodeInfo=recycle(rootNode);
+        nodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        AccessibilityNodeInfo parent=nodeInfo.getParent();
+        while(parent!=null){
+            if (parent.isClickable()){
+                parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                break;
+            }
+            parent=parent.getParent();
+        }
+    }
+
+    /**
      * 递归查找当前聊天窗口的红包信息
      * @param nodeInfo
      * @return
