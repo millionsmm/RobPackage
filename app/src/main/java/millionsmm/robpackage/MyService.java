@@ -73,6 +73,26 @@ public class MyService extends AccessibilityService {
         }
     }
 
+    /**
+     * 递归查找当前聊天窗口的红包信息
+     * @param nodeInfo
+     * @return
+     */
+    public AccessibilityNodeInfo recycle(AccessibilityNodeInfo nodeInfo) {
+        if (nodeInfo.getChildCount() == 0) {
+            if (nodeInfo.getText() != null) {
+                if ("领取红包".equals(nodeInfo.getText().toString())) {
+                    return nodeInfo;
+                }
+            }
+        } else {
+            for (int i = 0; i < nodeInfo.getChildCount(); i++) {
+                recycle(nodeInfo.getChild(i));
+            }
+        }
+        return nodeInfo;
+    }
+
 
     @Override
     public void onInterrupt() {
